@@ -93,6 +93,9 @@ func (c *Coordinator) Done() bool {
 	ret := false
 
 	// Your code here.
+	if c.reduceTasksCompleted == c.totalReduceTasks {
+		ret = true
+	}
 
 
 	return ret
