@@ -23,11 +23,12 @@ type Coordinator struct {
 
 // Your code here -- RPC handlers for the worker to call.
 func (c *Coordinator) GetTask(args *Args, reply *Reply) error {
-	for c.mapTasksCompleted < c.totalMapTasks {
+	if c.mapTasksCompleted < c.totalMapTasks {
 		c.mapTasksLock.Lock()
 		if c.mapTasksCompleted < c.totalMapTasks {
 			reply.FileToProcess = c.filesToProcess[c.mapTasksCompleted]
 			reply.MapOrReduceTask = MapTask
+			reply.TaskNum = c.mapTasksCompleted
 			// TODO: Add a new handler to the coordinator that accepts acks of tasks. Only then increment it.
 			// Also add logic for waiting 10
 			c.mapTasksCompleted++
@@ -36,12 +37,15 @@ func (c *Coordinator) GetTask(args *Args, reply *Reply) error {
 		}
 	}
 
-	for c.reduceTasksCompleted < c.totalReduceTasks {
+	if c.reduceTasksCompleted < c.totalReduceTasks {
 		c.reduceTasksLock.Lock()
 		if c.reduceTasksCompleted < c.totalReduceTasks {
 			reply.FileToProcess = fmt.Sprint(c.reduceTasksCompleted)
 			reply.MapOrReduceTask = ReduceTask
+			reply.TaskNum = c.reduceTasksCompleted
 			c.reduceTasksCompleted++
+			// TODO: Add a new handler to the coordinator that accepts acks of tasks. Only then increment it.
+			// Also add logic for waiting 10
 			c.reduceTasksLock.Unlock()
 			return nil
 		}

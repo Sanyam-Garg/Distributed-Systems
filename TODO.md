@@ -1,6 +1,6 @@
 ## Worker 
 - [ ] Worker requests the coordinator for more tasks in a loop.
-- [ ] Produce intermediate files after each map task. Basically, running a map task will give an array of key-value pairs. Split that array into `nReduce` parts, and write each part to file `mr-mapX-reduceY` where X is the map task num and Y is the reduce task num which will be performed.
+- [ ] Produce intermediate files after each map task. Basically, for each key-value pair, decide via hash in which reduce task number it should be processed, and then write to `mr-mapX-reduceY`
 - [ ] Once all files have been processed, perform `nReduce` reduce tasks.
 
 ## Coordinator

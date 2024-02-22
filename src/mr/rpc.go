@@ -38,6 +38,7 @@ type Args struct{
 type Reply struct{
 	FileToProcess string
 	MapOrReduceTask TaskType
+	TaskNum int
 }
 
 // Cook up a unique-ish UNIX-domain socket name
