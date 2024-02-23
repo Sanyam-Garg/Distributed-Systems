@@ -22,7 +22,16 @@ type Coordinator struct {
 }
 
 // Your code here -- RPC handlers for the worker to call.
+func (c *Coordinator) AcknowledgeCompletion(args *Args, reply *Reply) error {
+	if args.RequestType == int(Ack) {
+		return nil
+	}
+
+	return nil
+}
+
 func (c *Coordinator) GetTask(args *Args, reply *Reply) error {
+	reply.NReduceTasks = c.totalReduceTasks
 	if c.mapTasksCompleted < c.totalMapTasks {
 		c.mapTasksLock.Lock()
 		if c.mapTasksCompleted < c.totalMapTasks {
@@ -33,6 +42,7 @@ func (c *Coordinator) GetTask(args *Args, reply *Reply) error {
 			// Also add logic for waiting 10
 			c.mapTasksCompleted++
 			c.mapTasksLock.Unlock()
+			fmt.Print(reply)
 			return nil
 		}
 	}
@@ -82,6 +92,7 @@ func (c *Coordinator) server() {
 	if e != nil {
 		log.Fatal("listen error:", e)
 	}
+	fmt.Printf("listening on socket unix://%v\n", sockname)
 	go http.Serve(l, nil)
 }
 

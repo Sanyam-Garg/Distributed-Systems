@@ -31,14 +31,21 @@ const (
 	ExitTask
 )
 
+const (
+	Task = iota
+	Ack
+)
+
 type Args struct{
-	WorkerID int
+	RequestType int
+
 }
 
 type Reply struct{
 	FileToProcess string
 	MapOrReduceTask TaskType
 	TaskNum int
+	NReduceTasks int
 }
 
 // Cook up a unique-ish UNIX-domain socket name
